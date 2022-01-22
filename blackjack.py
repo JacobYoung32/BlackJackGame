@@ -15,6 +15,7 @@ class Card:
             raise TypeError("The suit must be either hearts, diamonds, spades or clubs.")
         self.value = value
         self.suit = suit
+        shown = False
         # Checks to see if it's a possible card. If not then return an error that says so
 
     def showCard(self):
@@ -30,6 +31,7 @@ class Card:
         else:
             trueValue = self.value
         print("{} of {}".format(trueValue, self.suit))
+        shown = True
 
 
 class Deck:
@@ -118,6 +120,14 @@ def win(dt, pt):
         print("You lose!")
         return 0
 
+    if dt >= 17:
+        if dt >= pt:
+            print("You lose!")
+            return 0
+        else:
+            print("You win!")
+            return 1
+
 def game():
     deck = Deck()
     deck.shuffle()
@@ -125,7 +135,9 @@ def game():
     clear()
     printHeader()
 
-    player = Player("Jacob", 1000)
+    playerName = input("Enter your name: ")
+
+    player = Player(playerName, 1000)
     playerHand = []
 
     Dealer = Player("Dealer", 0)
@@ -145,23 +157,22 @@ def game():
         printHeader()
 
         if turn == 1:
-            dealerCard = deck.drawCard()
-            dealerHand.append(dealerCard)
-
             for i in range(2):
                 playerCard = deck.drawCard()
                 playerHand.append(playerCard)
+                dealerCard = deck.drawCard()
+                dealerHand.append(dealerCard)
 
             print("Dealer's hand:")
-            for card in dealerHand:
-                card.showCard()
+            card = dealerHand[0]
+            card.showCard()
 
-                if card.value > 10:
-                    dealerTotal = dealerTotal + 10
-                elif card.value == 1:
-                    dealerTotal = dealerTotal + 11
-                else:
-                    dealerTotal = dealerTotal + card.value
+            if card.value > 10:
+                dealerTotal = dealerTotal + 10
+            elif card.value == 1:
+                dealerTotal = dealerTotal + 11
+            else:
+                dealerTotal = dealerTotal + card.value
 
             print("Dealer's total is:", dealerTotal)
 
@@ -178,59 +189,103 @@ def game():
 
             print(player.name + "'s total is:", playerTotal)
 
-            #win(dealerTotal, playerTotal)
-
             if win(dealerTotal, playerTotal) == 1:
                 player.deposit(bet*2)
                 endGame = True
+                break
             elif win(dealerTotal, playerTotal) == 0:
                 endGame = True
+                break
 
             turn = turn + 1
+            endGame = True
 
         else:
-            card = deck.drawCard()
-            dealerHand.append(card)
-            card.showCard()
-
-            if card.value > 10:
-                dealerTotal = dealerTotal + 10
-            elif card.value == 1:
-                dealerTotal = dealerTotal + 11
-            else:
-                dealerTotal = dealerTotal + card.value
-
             print("Dealer's total is:", dealerTotal)
-
-            win(dealerTotal, playerTotal)
-
-            if win(dealerTotal, playerTotal) == 1:
-                player.deposit(bet*2)
-                endGame = True
-            elif win(dealerTotal, playerTotal) == 0:
-                endGame = True
-
-            card = deck.drawCard()
-            playerHand.append(card)
-            card.showCard()
-
-            if card.value > 10:
-                playerTotal = playerTotal + 10
-            elif card.value == 1:
-                playerTotal = playerTotal + 11
-            else:
-                playerTotal = playerTotal + card.value
-
             print(player.name + "'s total is:", playerTotal)
+            hsChoice = input("Hit or stand(H/S): ")
 
-            win(dealerTotal, playerTotal)
+            if hsChoice.lower() == "s":
+                card = dealerHand[1]
 
-            if win(dealerTotal, playerTotal) == 1:
-                player.deposit(bet*2)
-                endGame = True
-            elif win(dealerTotal, playerTotal) == 0:
-                endGame = True
-    gameOver()
+                if not card.shown:
+                    card.showCard()
+                    if card.value > 10:
+                        dealerTotal = dealerTotal + 10
+                    elif card.value == 1:
+                        dealerTotal = dealerTotal + 11
+                    else:
+                        dealerTotal = dealerTotal + card.value
+                
+                while dealerTotal < 17:
+                    card = deck.drawCard()
+                    dealerHand.append(card)
+                    card.showCard()
+
+                    if card.value > 10:
+                        dealerTotal = dealerTotal + 10
+                    elif card.value == 1:
+                        dealerTotal = dealerTotal + 11
+                    else:
+                        dealerTotal = dealerTotal + card.value
+
+                if win(dealerTotal, playerTotal) == 1:
+                    player.deposit(bet * 2)
+                    endGame = True
+                    break
+                elif win(dealerTotal, playerTotal) == 0:
+                    endGame = True
+                    break
+
+            elif hsChoice.lower() == "h":
+                card = deck.drawCard()
+                playerHand.append(card)
+                card.showCard()
+        #
+        #
+        #
+        #     card = deck.drawCard()
+        #     dealerHand.append(card)
+        #     card.showCard()
+        #
+        #     if card.value > 10:
+        #         dealerTotal = dealerTotal + 10
+        #     elif card.value == 1:
+        #         dealerTotal = dealerTotal + 11
+        #     else:
+        #         dealerTotal = dealerTotal + card.value
+        #
+        #     print("Dealer's total is:", dealerTotal)
+        #
+        #     win(dealerTotal, playerTotal)
+        #
+        #     if win(dealerTotal, playerTotal) == 1:
+        #         player.deposit(bet*2)
+        #         endGame = True
+        #     elif win(dealerTotal, playerTotal) == 0:
+        #         endGame = True
+        #
+        #     card = deck.drawCard()
+        #     playerHand.append(card)
+        #     card.showCard()
+        #
+        #     if card.value > 10:
+        #         playerTotal = playerTotal + 10
+        #     elif card.value == 1:
+        #         playerTotal = playerTotal + 11
+        #     else:
+        #         playerTotal = playerTotal + card.value
+        #
+        #     print(player.name + "'s total is:", playerTotal)
+        #
+        #     win(dealerTotal, playerTotal)
+        #
+        #     if win(dealerTotal, playerTotal) == 1:
+        #         player.deposit(bet*2)
+        #         endGame = True
+        #     elif win(dealerTotal, playerTotal) == 0:
+        #         endGame = True
+    # gameOver()
 
 
 game()
