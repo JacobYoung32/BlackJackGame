@@ -158,6 +158,7 @@ class Game:
             self.gameOver()
 
     def updateTotal(self, card, total):
+        # Takes a card and a total and then adds the value of the card to the total
         if card.value > 10:
             total = total + 10
         elif card.value == 1:
@@ -165,7 +166,11 @@ class Game:
         else:
             total = total + card.value
 
-    def turnOne(self, deck):
+    def turnOne(self):
+        # This plays the first turn of a hand of blackjack
+        # The first turn is defined separately because it follows a different procedure to subsequent turns
+
+        # This loop adds cards to the hands of the player and the dealer
         for i in range(2):
             playerCard = self.deck.drawCard()
             self.updateTotal(playerCard, self.playerTotal)
@@ -174,21 +179,24 @@ class Game:
             dealerCard = self.deck.drawCard()
             self.dealerHand.append(dealerCard)
 
+        # Prints the dealer's hand and updates their total
         print("Dealer's hand:")
         card = self.dealerHand[0]
         self.updateTotal(card, self.dealerTotal)
         print("?")
         print(f"Dealer's total is {self.dealerTotal}")
 
+        # Prints the player's hand and total
         print(f"{self.player.name}'s hand:")
         for card in self.playerHand:
             card.showCard()
         print(f"{self.player.name}'s total is: {self.playerTotal}")
 
+        # Checks if the player has won or lost and ends the game if they have 
         if self.win(self.playerTotal, self.dealerTotal) == 1:
             self.player.deposit(self.bet * 2)
             self.gameOver()
-            
+
         elif self.win(self.playerTotal, self.dealerTotal) == 0:
             self.gameOver()
 
