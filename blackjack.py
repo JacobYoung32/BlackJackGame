@@ -85,7 +85,6 @@ class Player:
 
 class Game:
     def __init__(self):
-        # Main game
         self.deck = Deck()
         self.deck.shuffle()
 
@@ -106,6 +105,8 @@ class Game:
         print(f"{self.player.name}'s current balance is ${self.player.balance}")
 
         self.bet = self.player.bet()
+
+        self.turnOne()
 
     def clear(self):
         # Clears system screen
@@ -157,14 +158,18 @@ class Game:
             print("Answer must be Y or N!")
             self.gameOver()
 
+    def hitOrStand(self):
+        choice = input("Would you like to hit or stand? (H/S): ")
+        return choice.lower()
+
     def updateTotal(self, card, total):
         # Takes a card and a total and then adds the value of the card to the total
         if card.value > 10:
-            total = total + 10
+            return total + 10
         elif card.value == 1:
-            total = total + 11
+            return total + 11
         else:
-            total = total + card.value
+            return total + card.value
 
     def turnOne(self):
         # This plays the first turn of a hand of blackjack
@@ -173,7 +178,7 @@ class Game:
         # This loop adds cards to the hands of the player and the dealer
         for i in range(2):
             playerCard = self.deck.drawCard()
-            self.updateTotal(playerCard, self.playerTotal)
+            self.playerTotal = self.updateTotal(playerCard, self.playerTotal)
             self.playerHand.append(playerCard)
 
             dealerCard = self.deck.drawCard()
@@ -182,8 +187,9 @@ class Game:
         # Prints the dealer's hand and updates their total
         print("Dealer's hand:")
         card = self.dealerHand[0]
-        self.updateTotal(card, self.dealerTotal)
-        print("?")
+        card.showCard()
+        self.dealerTotal = self.updateTotal(card, self.dealerTotal)
+        print("? of ?")
         print(f"Dealer's total is {self.dealerTotal}")
 
         # Prints the player's hand and total
@@ -192,7 +198,7 @@ class Game:
             card.showCard()
         print(f"{self.player.name}'s total is: {self.playerTotal}")
 
-        # Checks if the player has won or lost and ends the game if they have 
+        # Checks if the player has won or lost and ends the game if they have
         if self.win(self.playerTotal, self.dealerTotal) == 1:
             self.player.deposit(self.bet * 2)
             self.gameOver()
