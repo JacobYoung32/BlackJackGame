@@ -1,4 +1,5 @@
 # TODO:
+# Change game() function into an object
 # Implement gui
 
 import random as r
@@ -8,6 +9,7 @@ suits = ("hearts", "diamonds", "spades", "clubs")
 
 class Card:
     def __init__(self, value, suit):
+        # Initializes a card object and ensures that it is a possible card
         if value not in range(1, 14):
             raise TypeError("The value of the card must be between 1 and  13.")
         if suit.lower() not in suits:
@@ -15,10 +17,9 @@ class Card:
         self.value = value
         self.suit = suit
         self.shown = False
-        # Checks to see if it's a possible card. If not then return an error that says so
 
     def showCard(self):
-        # This function prints the standard name of a card
+        # Prints the standard name of a card
         if self.value == 1:
             trueValue = "Ace"
         elif self.value == 11:
@@ -39,23 +40,23 @@ class Deck:
         self.build()
 
     def build(self):
-        # This function builds the deck by looping through every possible card for each suit
+        # Builds the deck by looping through every possible card for each suit
         for suit in suits:
             for value in range(1, 14):
                 self.cards.append(Card(value, suit))
 
     def showDeck(self):
-        # This function goes through each card in the deck one by one and prints the standard name for each card
+        # Goes through each card in the deck one by one and prints the standard name for each card
         for c in self.cards:
             c.showCard()
 
     def shuffle(self):
-        # This function randomizes the order of the deck
+        # Randomizes the order of the deck
         for i in range(0, 5):
             r.shuffle(self.cards)
 
     def drawCard(self):
-        # This function takes the first card from the top of the deck and returns it
+        # Takes the first card from the top of the deck and returns it
         return self.cards.pop()
 
 
@@ -65,7 +66,7 @@ class Player:
         self.balance = balance
 
     def bet(self):
-        # This function takes the player's wager for a hand of blackjack
+        # Takes the player's wager for a hand of blackjack
         wager = int(input("How much would " + self.name + " like to bet: "))
 
         if wager > self.balance:
@@ -78,9 +79,59 @@ class Player:
         return wager
 
     def deposit(self, amount):
-        # This function deposits money into the player's account
+        # Deposits money into the player's account
         self.balance = self.balance + amount
 
+
+class Game:
+    def __init__(self):
+        deck = Deck()
+        deck.shuffle()
+
+    def clear(self):
+        _ = system('clear')
+
+    def printHeader(self):
+        print("__          __  _                            _______      ____  _            _        _            _")
+        print("\ \        / / | |                          |__   __|    |  _ \| |          | |      | |          | |")
+        print(" \ \  /\  / /__| | ___ ___  _ __ ___   ___     | | ___   | |_) | | __ _  ___| | __   | | __ _  ___| | __")
+        print("  \ \/  \/ / _ \ |/ __/ _ \| '_ ` _ \ / _ \    | |/ _ \  |  _ <| |/ _` |/ __| |/ /   | |/ _` |/ __| |/ /")
+        print("   \  /\  /  __/ | (_| (_) | | | | | |  __/    | | (_) | | |_) | | (_| | (__|   < |__| | (_| | (__|   < ")
+        print("    \/  \/ \___|_|\___\___/|_| |_| |_|\___|    |_|\___/  |____/|_|\__,_|\___|_|\_\____/ \__,_|\___|_|\_\ ")
+
+    def win(self, pt, dt):
+        if dt == 21:
+            print("You lose!")
+            return 0
+        elif dt > 21:
+            print("You win!")
+            return 1
+
+        if pt == 21:
+            print("You win!")
+            return 1
+        elif pt > 21:
+            print("You lose!")
+            return 0
+
+        if dt >= 17:
+            if dt >= pt:
+                print("You lose!")
+                return 0
+            else:
+                print("You win!")
+                return 1
+
+    def gameOver(self):
+        answer = input("Would you like to play again? Y/N\n")
+        if answer.lower() == 'y':
+            game()
+        elif answer.lower() == 'n':
+            print("Okay! Have a great day!")
+            exit(0)
+        else:
+            print("Answer must be Y or N!")
+            gameOver()
 
 def gameOver():
     answer = input("Would you like to play again? Y/N\n")
