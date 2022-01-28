@@ -1,5 +1,5 @@
 # TODO:
-# Change game() function into an object
+# Implement rest of game logic into Game class
 # Implement gui
 
 import random as r
