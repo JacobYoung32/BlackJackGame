@@ -30,7 +30,7 @@ class Card:
             trueValue = "King"
         else:
             trueValue = self.value
-        print("{} of {}".format(trueValue, self.suit))
+        print(f"{trueValue} of {self.suit}")
         self.shown = True
 
 
@@ -74,7 +74,7 @@ class Player:
             self.bet()
         else:
             self.balance = self.balance - wager
-            print(self.name + "'s new balance is", self.balance)
+            print(f"{self.name}'s new balance is ${self.balance}")
 
         return wager
 
@@ -85,19 +85,36 @@ class Player:
 
 class Game:
     def __init__(self):
+        # Main game
         deck = Deck()
         deck.shuffle()
 
+        self.clear()
+        self.printHeader()
+
+        # Initializes information about the player
+        playerName = input("Enter your name: ")
+        player = Player(playerName, 1000)
         playerHand = []
         playerTotal = 0
 
+        # Initializes information about the dealer
+        dealer = Player("Dealer", 0)
         dealerHand = []
         dealerTotal = 0
 
+        print(f"{player.name}'s current balance is ${player.balance}")
+
+        bet = player.bet()
+
+
+
     def clear(self):
+        # Clears system screen
         _ = system('clear')
 
     def printHeader(self):
+        # Prints game header
         print("__          __  _                            _______      ____  _            _        _            _")
         print("\ \        / / | |                          |__   __|    |  _ \| |          | |      | |          | |")
         print(" \ \  /\  / /__| | ___ ___  _ __ ___   ___     | | ___   | |_) | | __ _  ___| | __   | | __ _  ___| | __")
@@ -106,6 +123,8 @@ class Game:
         print("    \/  \/ \___|_|\___\___/|_| |_| |_|\___|    |_|\___/  |____/|_|\__,_|\___|_|\_\____/ \__,_|\___|_|\_\ ")
 
     def win(self, pt, dt):
+        # Defines and checks win conditions based on player and dealer totals
+        # Returns a 0 if the player loses and a 1 if they win
         if dt == 21:
             print("You lose!")
             return 0
@@ -129,6 +148,7 @@ class Game:
                 return 1
 
     def gameOver(self):
+        # Called when the player wins or loses
         answer = input("Would you like to play again? Y/N\n")
         if answer.lower() == 'y':
             game()
@@ -137,52 +157,7 @@ class Game:
             exit(0)
         else:
             print("Answer must be Y or N!")
-            gameOver()
-
-def gameOver():
-    answer = input("Would you like to play again? Y/N\n")
-    if answer.lower() == 'y':
-        game()
-    elif answer.lower() == 'n':
-        print("Okay! Have a great day!")
-        exit(0)
-    else:
-        print("Answer must be Y or N!")
-        gameOver()
-
-def clear():
-    _ = system('clear')
-
-def printHeader():
-    print("__          __  _                            _______      ____  _            _        _            _")
-    print("\ \        / / | |                          |__   __|    |  _ \| |          | |      | |          | |")
-    print(" \ \  /\  / /__| | ___ ___  _ __ ___   ___     | | ___   | |_) | | __ _  ___| | __   | | __ _  ___| | __")
-    print("  \ \/  \/ / _ \ |/ __/ _ \| '_ ` _ \ / _ \    | |/ _ \  |  _ <| |/ _` |/ __| |/ /   | |/ _` |/ __| |/ /")
-    print("   \  /\  /  __/ | (_| (_) | | | | | |  __/    | | (_) | | |_) | | (_| | (__|   < |__| | (_| | (__|   < ")
-    print("    \/  \/ \___|_|\___\___/|_| |_| |_|\___|    |_|\___/  |____/|_|\__,_|\___|_|\_\____/ \__,_|\___|_|\_\ ")
-
-def win(dt, pt):
-    if dt == 21:
-        print("You lose!")
-        return 0
-    elif dt > 21:
-        print("You win!")
-        return 1
-
-    if pt == 21:
-        print("You win!")
-        return 1
-    elif pt > 21:
-        print("You lose!")
-        return 0
-
-    if dt >= 17:
-        if dt >= pt:
-            print("You lose!")
-            return 0
-        else:
-            print("You win!")
-            return 1
+            self.gameOver()
 
 def game():
     deck = Deck()
@@ -320,4 +295,4 @@ def game():
 
     gameOver()
 
-game()
+Game()
