@@ -86,28 +86,26 @@ class Player:
 class Game:
     def __init__(self):
         # Main game
-        deck = Deck()
-        deck.shuffle()
+        self.deck = Deck()
+        self.deck.shuffle()
 
         self.clear()
         self.printHeader()
 
         # Initializes information about the player
         playerName = input("Enter your name: ")
-        player = Player(playerName, 1000)
-        playerHand = []
-        playerTotal = 0
+        self.player = Player(playerName, 1000)
+        self.playerHand = []
+        self.playerTotal = 0
 
         # Initializes information about the dealer
-        dealer = Player("Dealer", 0)
-        dealerHand = []
-        dealerTotal = 0
+        self.dealer = Player("Dealer", 0)
+        self.dealerHand = []
+        self.dealerTotal = 0
 
-        print(f"{player.name}'s current balance is ${player.balance}")
+        print(f"{self.player.name}'s current balance is ${self.player.balance}")
 
-        bet = player.bet()
-
-
+        bet = self.player.bet()
 
     def clear(self):
         # Clears system screen
@@ -158,6 +156,31 @@ class Game:
         else:
             print("Answer must be Y or N!")
             self.gameOver()
+
+    def updateTotal(self, card, total):
+        if card.value > 10:
+            total = total + 10
+        elif card.value == 1:
+            total = total + 11
+        else:
+            total = total + card.value
+
+    def turnOne(self, deck):
+        for i in range(2):
+            playerCard = self.deck.drawCard()
+            self.updateTotal(playerCard, self.playerTotal)
+            self.playerHand.append(playerCard)
+
+            dealerCard = self.deck.drawCard()
+            self.dealerHand.append(dealerCard)
+
+        print("Dealer's hand:")
+        card = self.dealerHand[0]
+        self.updateTotal(card, self.dealerTotal)
+        card.showCard()
+        print(f"Dealer's total is {self.dealerTotal}")
+
+
 
 def game():
     deck = Deck()
