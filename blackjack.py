@@ -106,6 +106,7 @@ class Game:
 
         self.bet = self.player.bet()
 
+        # Starts the game
         self.turnOne()
 
     def clear(self):
@@ -127,14 +128,14 @@ class Game:
         if dt == 21:
             print("You lose!")
             return 0
-        elif dt > 21:
+        if dt > 21:
             print("You win!")
             return 1
 
         if pt == 21:
             print("You win!")
             return 1
-        elif pt > 21:
+        if pt > 21:
             print("You lose!")
             return 0
 
@@ -148,9 +149,9 @@ class Game:
 
     def gameOver(self):
         # Called when the player wins or loses
-        answer = input("Would you like to play again? Y/N\n")
+        answer = input("Would you like to play again? (Y/N): ")
         if answer.lower() == 'y':
-            game()
+            self.turnOne()
         elif answer.lower() == 'n':
             print("Okay! Have a great day!")
             exit(0)
@@ -160,7 +161,11 @@ class Game:
 
     def hitOrStand(self):
         choice = input("Would you like to hit or stand? (H/S): ")
-        return choice.lower()
+        if choice.lower() == "h" or choice.lower() == "s":
+            return choice.lower()
+        else:
+            print("Your choice must be an H or an S!\n")
+            self.hitOrStand()
 
     def updateTotal(self, card, total):
         # Takes a card and a total and then adds the value of the card to the total
@@ -205,6 +210,43 @@ class Game:
 
         elif self.win(self.playerTotal, self.dealerTotal) == 0:
             self.gameOver()
+
+        if self.hitOrStand() == "s":
+            self.stand()
+        else:
+            print("Your choice must be an H or an S!")
+
+    def stand(self):
+        self.clear()
+        self.printHeader()
+
+        card = self.dealerHand[1]
+        self.dealerTotal = self.updateTotal(card, self.dealerTotal)
+
+        print(f"Dealer's total is: {self.dealerTotal}")
+        for card in self.dealerHand:
+            card.showCard()
+
+        print(f"{self.player.name}'s total is: {self.playerTotal}")
+        for card in self.playerHand:
+            card.showCard()
+
+        while self.dealerTotal < 17:
+            card = self.deck.drawCard()
+            self.dealerHand.append(card)
+            print("\n")
+            card.showCard()
+            self.dealerTotal = self.updateTotal(card, self.dealerTotal)
+            print(f"\nDealer's total is: {self.dealerTotal}")
+
+        if self.win(self.playerTotal, self.dealerTotal) == 1:
+            self.player.deposit(self.bet * 2)
+            self.gameOver()
+
+        elif self.win(self.playerTotal, self.dealerTotal) == 0:
+            self.gameOver()
+
+
 
 
 
