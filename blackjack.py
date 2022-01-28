@@ -88,6 +88,12 @@ class Game:
         deck = Deck()
         deck.shuffle()
 
+        playerHand = []
+        playerTotal = 0
+
+        dealerHand = []
+        dealerTotal = 0
+
     def clear(self):
         _ = system('clear')
 
