@@ -1,5 +1,4 @@
 # TODO:
-# Implement "stand" option in game() function
 # Implement gui
 
 import random as r
