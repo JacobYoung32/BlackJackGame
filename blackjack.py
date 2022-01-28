@@ -105,7 +105,7 @@ class Game:
 
         print(f"{self.player.name}'s current balance is ${self.player.balance}")
 
-        bet = self.player.bet()
+        self.bet = self.player.bet()
 
     def clear(self):
         # Clears system screen
@@ -177,8 +177,20 @@ class Game:
         print("Dealer's hand:")
         card = self.dealerHand[0]
         self.updateTotal(card, self.dealerTotal)
-        card.showCard()
+        print("?")
         print(f"Dealer's total is {self.dealerTotal}")
+
+        print(f"{self.player.name}'s hand:")
+        for card in self.playerHand:
+            card.showCard()
+        print(f"{self.player.name}'s total is: {self.playerTotal}")
+
+        if self.win(self.playerTotal, self.dealerTotal) == 1:
+            self.player.deposit(self.bet * 2)
+            self.gameOver()
+            
+        elif self.win(self.playerTotal, self.dealerTotal) == 0:
+            self.gameOver()
 
 
 
