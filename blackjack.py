@@ -125,21 +125,13 @@ class Game:
     def win(self, pt, dt):
         # Defines and checks win conditions based on player and dealer totals
         # Returns a 0 if the player loses and a 1 if they win
-        if dt == 21:
+        if dt == 21 or pt > 21:
             print("You lose!")
             return 0
-        if dt > 21:
+        elif pt == 21 or dt > 21:
             print("You win!")
             return 1
-
-        if pt == 21:
-            print("You win!")
-            return 1
-        if pt > 21:
-            print("You lose!")
-            return 0
-
-        if dt >= 17:
+        elif dt >= 17:
             if dt >= pt:
                 print("You lose!")
                 return 0
@@ -158,6 +150,18 @@ class Game:
         else:
             print("Answer must be Y or N!")
             self.gameOver()
+
+    def restart(self):
+        # Called if the player chooses to play again
+        self.deck = Deck()
+
+        self.playerHand = []
+        self.playerTotal = 0
+
+        self.dealerHand = []
+        self.dealerTotal = 0
+
+        self.turnOne()
 
     def hitOrStand(self):
         choice = input("Would you like to hit or stand? (H/S): ")
@@ -207,7 +211,6 @@ class Game:
         if self.win(self.playerTotal, self.dealerTotal) == 1:
             self.player.deposit(self.bet * 2)
             self.gameOver()
-
         elif self.win(self.playerTotal, self.dealerTotal) == 0:
             self.gameOver()
 
@@ -246,3 +249,6 @@ class Game:
         elif self.win(self.playerTotal, self.dealerTotal) == 0:
             self.gameOver()
 
+
+game = Game()
+game.__init__()
