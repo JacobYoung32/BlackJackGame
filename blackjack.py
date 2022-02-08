@@ -1,5 +1,6 @@
 # TODO:
-# Implement rest of game logic into Game class
+# Implement 'hit' function into game class
+# Reset deck and hands if player chooses to play another game
 # Implement gui
 
 import random as r
