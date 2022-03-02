@@ -5,6 +5,7 @@
 
 import random as r
 from os import system
+import time
 
 suits = ("hearts", "diamonds", "spades", "clubs")
 
@@ -68,11 +69,15 @@ class Player:
 
     def bet(self):
         # Takes the player's wager for a hand of blackjack
-        wager = int(input("How much would " + self.name + " like to bet: "))
+        while True:
+            try:
+                wager = int(input("How much would " + self.name + " like to bet: "))
+                break
+            except:
+                print("Your bet must be a number! Try again!")
 
         if wager > self.balance:
             print("Insufficient funds!")
-            self.bet()
         else:
             self.balance = self.balance - wager
             print(f"{self.name}'s new balance is ${self.balance}")
@@ -106,6 +111,8 @@ class Game:
         print(f"{self.player.name}'s current balance is ${self.player.balance}")
 
         self.bet = self.player.bet()
+        print("---------------------------")
+        time.sleep(1)
 
         # Starts the game
         self.turnOne()
@@ -201,12 +208,18 @@ class Game:
         self.dealerTotal = self.updateTotal(card, self.dealerTotal)
         print("? of ?")
         print(f"Dealer's total is {self.dealerTotal}")
+        print("---------------------------")
+
+        time.sleep(1)
 
         # Prints the player's hand and total
         print(f"{self.player.name}'s hand:")
         for card in self.playerHand:
             card.showCard()
         print(f"{self.player.name}'s total is: {self.playerTotal}")
+        print("---------------------------")
+
+        time.sleep(1)
 
         # Checks if the player has won or lost and ends the game if they have
         if self.win(self.playerTotal, self.dealerTotal) == 1:
@@ -222,7 +235,6 @@ class Game:
 
     def stand(self):
         self.clear()
-        self.printHeader()
 
         card = self.dealerHand[1]
         self.dealerTotal = self.updateTotal(card, self.dealerTotal)
