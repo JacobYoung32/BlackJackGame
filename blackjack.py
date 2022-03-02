@@ -230,6 +230,33 @@ class Game:
 
         if self.hitOrStand() == "s":
             self.stand()
+        elif self.hitOrStand() == "h":
+            self.hit()
+        else:
+            print("Your choice must be an H or an S!")
+
+    def hit(self):
+        self.clear()
+
+        playerCard = self.deck.drawCard()
+        playerCard.showCard()
+        self.playerTotal = self.updateTotal(playerCard, self.playerTotal)
+        self.playerHand.append(playerCard)
+
+        print(f"{self.player.name}'s total is: {self.playerTotal}")
+        print("---------------------------")
+
+        time.sleep(1)
+
+        # Checks if the player has won or lost and ends the game if they have
+        if self.win(self.playerTotal, self.dealerTotal) == 1:
+            self.player.deposit(self.bet * 2)
+            self.gameOver()
+        elif self.win(self.playerTotal, self.dealerTotal) == 0:
+            self.gameOver()
+
+        if self.hitOrStand() == "s":
+            self.stand()
         else:
             print("Your choice must be an H or an S!")
 
