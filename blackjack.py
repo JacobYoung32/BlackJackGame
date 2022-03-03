@@ -1,5 +1,4 @@
 # TODO:
-# Implement 'hit' function into game class
 # Reset deck and hands if player chooses to play another game
 # Implement gui
 
@@ -151,7 +150,7 @@ class Game:
         # Called when the player wins or loses
         answer = input("Would you like to play again? (Y/N): ")
         if answer.lower() == 'y':
-            self.turnOne()
+            self.restart()
         elif answer.lower() == 'n':
             print("Okay! Have a great day!")
             exit(0)
@@ -188,6 +187,10 @@ class Game:
         else:
             return total + card.value
 
+    def showHand(self, hand):
+        for card in hand:
+            card.showCard()
+
     def turnOne(self):
         # This plays the first turn of a hand of blackjack
         # The first turn is defined separately because it follows a different procedure to subsequent turns
@@ -214,8 +217,7 @@ class Game:
 
         # Prints the player's hand and total
         print(f"{self.player.name}'s hand:")
-        for card in self.playerHand:
-            card.showCard()
+        self.showHand(self.playerHand)
         print(f"{self.player.name}'s total is: {self.playerTotal}")
         print("---------------------------")
 
@@ -228,6 +230,7 @@ class Game:
         elif self.win(self.playerTotal, self.dealerTotal) == 0:
             self.gameOver()
 
+        # If the player has not won or lost, this checks whether or not they choose to hit or to stand
         HSresult = self.hitOrStand()
 
         if HSresult == "s":
