@@ -107,12 +107,6 @@ class Game:
         self.dealerHand = []
         self.dealerTotal = 0
 
-        print(f"{self.player.name}'s current balance is ${self.player.balance}")
-
-        self.bet = self.player.bet()
-        print("---------------------------")
-        time.sleep(1)
-
         # Starts the game
         self.turnOne()
 
@@ -195,6 +189,13 @@ class Game:
         # This plays the first turn of a hand of blackjack
         # The first turn is defined separately because it follows a different procedure to subsequent turns
 
+        # This is how a player makes their bets and can see their current balance
+        print(f"{self.player.name}'s current balance is ${self.player.balance}")
+
+        self.bet = self.player.bet()
+        print("---------------------------")
+        time.sleep(1)
+
         # This loop adds cards to the hands of the player and the dealer
         for i in range(2):
             playerCard = self.deck.drawCard()
@@ -224,10 +225,13 @@ class Game:
         time.sleep(1)
 
         # Checks if the player has won or lost and ends the game if they have
-        if self.win(self.playerTotal, self.dealerTotal) == 1:
+        gameWin = self.win(self.playerTotal, self.dealerTotal)
+
+        if gameWin == 1:
             self.player.deposit(self.bet * 2)
             self.gameOver()
-        elif self.win(self.playerTotal, self.dealerTotal) == 0:
+
+        elif gameWin == 0:
             self.gameOver()
 
         # If the player has not won or lost, this checks whether or not they choose to hit or to stand
