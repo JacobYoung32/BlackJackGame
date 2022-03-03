@@ -333,6 +333,8 @@ class Game:
 
             card = self.deck.drawCard()
             self.dealerHand.append(card)
+            print("---------------------------")
+            print("Dealer's new card is: ")
             card.showCard()
             self.dealerTotal = self.updateTotal(card, self.dealerTotal)
             time.sleep(2)
