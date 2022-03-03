@@ -8,6 +8,10 @@ import time
 
 suits = ("hearts", "diamonds", "spades", "clubs")
 
+class InsufficientFundsError(Exception):
+    """A player's wager was larger than their account balance!"""
+    pass
+
 class Card:
     def __init__(self, value, suit):
         # Initializes a card object and ensures that it is a possible card
@@ -71,15 +75,18 @@ class Player:
         while True:
             try:
                 wager = int(input("How much would " + self.name + " like to bet: "))
-                break
-            except:
+                if wager > self.balance:
+                    raise InsufficientFundsError
+            except ValueError:
                 print("Your bet must be a number! Try again!")
-
-        if wager > self.balance:
-            print("Insufficient funds!")
-        else:
-            self.balance = self.balance - wager
-            print(f"{self.name}'s new balance is ${self.balance}")
+                pass
+            except InsufficientFundsError:
+                print("Insufficient funds!")
+                pass
+            else:
+                self.balance = self.balance - wager
+                print(f"{self.name}'s new balance is ${self.balance}")
+                break
 
         return wager
 
@@ -161,6 +168,9 @@ class Game:
 
         self.dealerHand = []
         self.dealerTotal = 0
+
+        self.clear()
+        self.printHeader()
 
         self.turnOne()
 
