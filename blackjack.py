@@ -228,35 +228,57 @@ class Game:
         elif self.win(self.playerTotal, self.dealerTotal) == 0:
             self.gameOver()
 
-        if self.hitOrStand() == "s":
+        HSresult = self.hitOrStand()
+
+        if HSresult == "s":
             self.stand()
-        elif self.hitOrStand() == "h":
+        elif HSresult == "h":
             self.hit()
         else:
             print("Your choice must be an H or an S!")
 
     def hit(self):
         self.clear()
+        print(f"Dealer's total is: {self.dealerTotal}")
+        for card in self.dealerHand:
+            card.showCard()
+        print("---------------------------")
 
         playerCard = self.deck.drawCard()
+        print(f"{self.player.name}'s new card is a:")
         playerCard.showCard()
         self.playerTotal = self.updateTotal(playerCard, self.playerTotal)
         self.playerHand.append(playerCard)
+        print("---------------------------")
 
+        time.sleep(1)
+
+        # Prints the player's hand and total
+        print(f"{self.player.name}'s hand:")
+        for card in self.playerHand:
+            card.showCard()
         print(f"{self.player.name}'s total is: {self.playerTotal}")
         print("---------------------------")
 
         time.sleep(1)
 
         # Checks if the player has won or lost and ends the game if they have
-        if self.win(self.playerTotal, self.dealerTotal) == 1:
+        gameWin = self.win(self.playerTotal, self.dealerTotal)
+
+        if gameWin == 1:
             self.player.deposit(self.bet * 2)
             self.gameOver()
-        elif self.win(self.playerTotal, self.dealerTotal) == 0:
+
+        elif gameWin == 0:
             self.gameOver()
 
-        if self.hitOrStand() == "s":
+        # Checks whether the player would like to hit or stand
+        HSresult = self.hitOrStand()
+
+        if HSresult == "s":
             self.stand()
+        elif HSresult == "h":
+            self.hit()
         else:
             print("Your choice must be an H or an S!")
 
@@ -266,27 +288,48 @@ class Game:
         card = self.dealerHand[1]
         self.dealerTotal = self.updateTotal(card, self.dealerTotal)
 
+        print(f"{self.player.name}'s total is: {self.playerTotal}")
+        for card in self.playerHand:
+            card.showCard()
+        print("---------------------------")
+
+        time.sleep(1)
+
         print(f"Dealer's total is: {self.dealerTotal}")
         for card in self.dealerHand:
             card.showCard()
 
-        print(f"{self.player.name}'s total is: {self.playerTotal}")
-        for card in self.playerHand:
-            card.showCard()
+        time.sleep(1)
 
         while self.dealerTotal < 17:
+            self.clear()
+            print(f"{self.player.name}'s total is: {self.playerTotal}")
+            for card in self.playerHand:
+                card.showCard()
+            print("---------------------------")
+
+            time.sleep(1)
+
+            print(f"Dealer's total is: {self.dealerTotal}")
+            for card in self.dealerHand:
+                card.showCard()
+
             card = self.deck.drawCard()
             self.dealerHand.append(card)
-            print("\n")
             card.showCard()
             self.dealerTotal = self.updateTotal(card, self.dealerTotal)
-            print(f"\nDealer's total is: {self.dealerTotal}")
+            time.sleep(2)
 
-        if self.win(self.playerTotal, self.dealerTotal) == 1:
+        print("---------------------------")
+        print(f"Dealer's total is: {self.dealerTotal}")
+
+        gameWin = self.win(self.playerTotal, self.dealerTotal)
+
+        if gameWin == 1:
             self.player.deposit(self.bet * 2)
             self.gameOver()
 
-        elif self.win(self.playerTotal, self.dealerTotal) == 0:
+        elif gameWin == 0:
             self.gameOver()
 
 
